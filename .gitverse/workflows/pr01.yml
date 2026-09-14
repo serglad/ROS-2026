@@ -21,6 +21,7 @@ jobs:
           printf '%s  %s\n' "$COURSE_KIT_SHA256" course-kit.tar.gz | sha256sum -c -
           mkdir -p .course-kit
           tar -xzf course-kit.tar.gz -C .course-kit
+          rm course-kit.tar.gz
       - name: Проверить JSON и совпадение версии архива
         shell: bash
         run: |
