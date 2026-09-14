@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "practice_id": "PR01",
+  "commit": "replace-with-implementation-commit",
+  "course_kit": {
+    "version": "v1-w02",
+    "archive_sha256": "5d210c431e32418f45e2cffa9dd2028116c7a9520a36f3c7079c778cd73437a8"
+  },
+  "commands": ["ros2 node list --no-daemon --spin-time 2","ros2 topic list -t","ros2 node info /turtlesim","ros2 topic type /turtle1/pose","ros2 topic echo /turtle1/pose --once","ros2 topic hz /turtle1/pose","ros2 topic hz /turtle1/color_sensor"],
+  "tests": [{"name": "node list", "status": "passed"},{"name": "topic list", "status": "passed"},{"name": "identical domains", "status": "passed"},{"name": "different domains", "status": "passed"},{"name": "domains fixed", "status": "passed"},{"name": "turtle1/pose hz", "status": "passed"},{"name": "turtle1/color_sensor hz", "status": "passed"}],
+  "defect": {
+    "reproducer": "Команда и наблюдаемый симптом до исправления",
+    "root_cause": "Причинное объяснение",
+    "proof_after": "Команда и результат после исправления"
+  },
+  "claims": {
+    "public_tests_passed": true,
+    "defect_reproduced": true,
+    "defect_fixed": true
+  },
+  "time": {
+    "contact_academic_hours": 2,
+    "self_study_hours": 1
+  },
+  "ai_used": false
+}

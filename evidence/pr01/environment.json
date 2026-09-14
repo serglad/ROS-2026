@@ -1,0 +1,8 @@
+{
+"Platform":"native",
+"OS":"Linux Mint 22.2",
+"ROS":"jazzy",
+"Gazebo":"8.11.0",
+"domains":[16,17]
+
+}

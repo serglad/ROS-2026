@@ -1,0 +1,46 @@
+
+== Система ==
+PRETTY_NAME="Linux Mint 22.2"
+VERSION_CODENAME=zara
+архитектура=x86_64
+ядро=6.8.0-139-generic
+назначенная оболочка=/bin/bash
+текущая оболочка=bash
+
+== Инструменты ==
+GNU bash, version 5.2.21(1)-release (x86_64-pc-linux-gnu)
+Copyright (C) 2022 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+git version 2.43.0
+[не найдено] fish
+uv 0.8.20
+1.136.1
+a44adf7f53e00964ab890f9f8758a334f1fc15bc
+x64
+Docker version 29.1.3, build 29.1.3-0ubuntu3~24.04.2
+
+== ROS 2 ==
+ROS_DISTRO=jazzy
+ROS_DOMAIN_ID=<не задано>
+ros2=/opt/ros/jazzy/bin/ros2
+/opt/ros/jazzy
+
+== Графические адаптеры и драйверы ==
+c1:00.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc. [AMD/ATI] Phoenix3 [1002:1900] (rev 06)
+	Subsystem: Device [1ee7:2056]
+	Kernel driver in use: amdgpu
+	Kernel modules: amdgpu
+
+== OpenGL renderer ==
+direct rendering: Yes
+OpenGL vendor string: AMD
+OpenGL renderer string: AMD Radeon 780M Graphics (radeonsi, phoenix, LLVM 20.1.2, DRM 3.57, 6.8.0-139-generic)
+OpenGL version string: 4.6 (Compatibility Profile) Mesa 25.2.8-0ubuntu0.24.04.2
+
+== Vulkan ==
+[не найдено] vulkaninfo; установите vulkan-tools
+
+== NVIDIA ==
+[не найдено] nvidia-smi; это нормально для Intel/AMD-only системы
+
+Отчёт завершён. Перед публикацией просмотрите его вручную.
