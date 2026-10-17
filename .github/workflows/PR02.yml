@@ -5,6 +5,8 @@ on: [push, pull_request]
 jobs:
   evidence:
     runs-on: ubuntu-latest
+    container:
+      image: osrf/ros:jazzy-desktop-full@sha256:d16957210572c5f919f3f9bd2fb0cc24a82542647489d8b8eda7c3beda31305f
     timeout-minutes: 10
     env:
       COURSE_KIT_URL: https://ros.lms.ci.nsu.ru/downloads/robotics-course-kit-v1-w06-6eda53e1c566.tar.gz
