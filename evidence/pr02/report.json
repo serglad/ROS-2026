@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "practice_id": "PR02",
+  "commit": "694df469cd16d24cd664caa17bd9542bcd20d9a2",
+  "course_kit": {
+    "version": "v1-w06",
+    "archive_sha256": "6eda53e1c566f7f0a7e09d7afe1e5a6f3b98397175a7e57dede9a84c6d14d0fe"
+  },
+  "commands": ["ros2 pkg prefix turtle_bringup","ls $(ros2 pkg prefix turtle_bringup)/share/turtle_bringup/launch","ros2 launch turtle_bringup sim.launch.py","ros2 node list --no-daemon --spin-time 2","ros2 topic echo /turtle1/pose --once","ros2 topic info /cmd_vel --verbose","ros2 topic info /turtle1/cmd_vel --verbose"],
+  "tests": [{"name": "node list", "status": "passed"},{"name": "topic list", "status": "passed"},{"name": "identical domains", "status": "passed"},{"name": "different domains", "status": "passed"},{"name": "domains fixed", "status": "passed"},{"name": "turtle1/pose hz", "status": "passed"},{"name": "turtle1/color_sensor hz", "status": "passed"}],
+  "defect": {
+    "reproducer": "ros2 topic pub --rate 1 --wait-matching-subscriptions 0 /cmd_vel geometry_msgs/msg/Twist {linear: {x: 1.0}, angular: {z: 0.5}}",
+    "root_cause": "/cmd_vel",
+    "proof_after": "ros2 topic pub --rate 1 --wait-matching-subscriptions 0 /turtle1/cmd_vel geometry_msgs/msg/Twist {linear: {x: 1.0}, angular: {z: 0.5}}"
+  },
+  "claims": {
+    "public_tests_passed": true,
+    "defect_reproduced": true,
+    "defect_fixed": true
+  },
+  "time": {
+    "contact_academic_hours": 2,
+    "self_study_hours": 1
+  },
+  "ai_used": false
+}
