@@ -1,0 +1,17 @@
+$ colcon build --symlink-install --packages-select patrol
+Finished <<< patrol
+
+$ python3 -m pytest src/patrol/test -v
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/degradedtomato/robotics_ws/src/patrol
+plugins: launch-testing-3.4.11, ament-copyright-0.17.5, launch-testing-ros-0.26.12, ament-pep257-0.17.5, ament-flake8-0.17.5, ament-lint-0.17.5, ament-xmllint-0.17.5, cov-4.1.0, colcon-core-0.21.3
+collecting ... collected 5 items
+src/patrol/test/test_copyright.py::test_copyright SKIPPED (No copyri...) [ 20%]
+src/patrol/test/test_flake8.py::test_flake8 PASSED                       [ 40%]
+src/patrol/test/test_patrol.py::test_zero_command_without_pose PASSED    [ 60%]
+src/patrol/test/test_patrol.py::test_cruise_command_after_normal_pose PASSED [ 80%]
+src/patrol/test/test_pep257.py::test_pep257 PASSED                       [100%]
+test/test_flake8.py: 16 warnings
+================== 4 passed, 1 skipped, 16 warnings in 0.51s ===================

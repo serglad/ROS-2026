@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "practice_id": "PR03",
+  "commit": "5f601158ae698cab029a5972f52eaa91fcc0de8d",
+  "course_kit": {
+    "version": "v1-w07",
+    "archive_sha256": "9b7fdd5424d3d97e47d51dbe23064934585e62135dc2902844dd679529bda929"
+  },
+  "commands": ["ros2 pkg create --build-type ament_python --node-name patrol patrol --dependencies rclpy geometry_msgs","colcon build --symlink-install --packages-select patrol","source install/setup.bash","python3 -m pytest src/patrol/test","ros2 run patrol patrol","ros2 run patrol patrol --ros-args -r cmd_vel:=/turtle1/cmd_vel","ros2 topic info /cmd_vel","ros2 topic info /turtle1/cmd_vel","timeout -s INT 6 ros2 topic hz /turtle1/cmd_vel","timeout -s INT 10 ros2 topic hz /turtle1/cmd_vel","ros2 topic echo /turtle1/pose --once","ros2 topic pub --once /turtle1/cmd_vel geometry_msgs/msg/Twist '{linear: {x: 0.0}, angular: {z: 0.0}}'"],
+  "tests": [{"name": "pytest src/patrol/test", "status": "passed"},{"name": "test_zero_command_without_pose", "status": "passed"},{"name": "test_cruise_command_after_normal_pose", "status": "passed"},{"name": "flake8", "status": "passed"},{"name": "pep257", "status": "passed"},{"name": "defect no remap: no messages on /turtle1/cmd_vel", "status": "passed"},{"name": "fixed remap: 10 Hz measured for 10 s", "status": "passed"}],
+  "defect": {
+    "reproducer": "ros2 run patrol patrol; ros2 topic hz /turtle1/cmd_vel — за 6 с нет ни одного сообщения, Publisher count на /cmd_vel: 1, на /turtle1/cmd_vel: 0, черепашка стоит",
+    "root_cause": "Издатель создан на относительное имя cmd_vel, которое разрешается в /cmd_vel и не соединяется с /turtle1/cmd_vel turtlesim",
+    "proof_after": "ros2 run patrol patrol --ros-args -r cmd_vel:=/turtle1/cmd_vel; ros2 topic info /turtle1/cmd_vel даёт 1/1, timeout -s INT 10 ros2 topic hz /turtle1/cmd_vel показывает average rate 10.000, поза черепашки меняется"
+  },
+  "claims": {
+    "public_tests_passed": true,
+    "defect_reproduced": true,
+    "defect_fixed": true
+  },
+  "time": {
+    "contact_academic_hours": 2,
+    "self_study_hours": 2
+  },
+  "ai_used": true
+}
