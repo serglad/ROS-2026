@@ -1,0 +1,42 @@
+$ xacro src/course_description/urdf/vehicle.urdf.xacro > /tmp/vehicle.urdf
+$ check_urdf /tmp/vehicle.urdf
+robot name is: course_ackermann
+---------- Successfully Parsed XML ---------------
+root Link: base_link has 7 child(ren)
+    child(1):  camera_link
+    child(2):  front_left_wheel_link
+    child(3):  front_right_wheel_link
+    child(4):  imu_link
+    child(5):  lidar_link
+    child(6):  rear_left_wheel_link
+    child(7):  rear_right_wheel_link
+
+$ ros2 run tf2_ros tf2_echo base_link lidar_link
+[INFO] [1793514665.937372446] [tf2_echo]: Waiting for transform base_link ->  lidar_link: Invalid frame ID "base_link" passed to canTransform argument target_frame - frame does not exist
+At time 0.0
+- Translation: [0.280, 0.000, 0.380]
+- Rotation: in Quaternion (xyzw) [0.000, 0.000, 0.000, 1.000]
+- Rotation: in RPY (radian) [0.000, -0.000, 0.000]
+- Rotation: in RPY (degree) [0.000, -0.000, 0.000]
+- Matrix:
+  1.000  0.000  0.000  0.280
+  0.000  1.000  0.000  0.000
+  0.000  0.000  1.000  0.380
+  0.000  0.000  0.000  1.000
+At time 0.0
+exit=0 (обрван после получения первых преобразований)
+
+$ ros2 run tf2_tools view_frames
+[INFO] [1793514669.292433074] [view_frames]: Listening to tf data for 5.0 seconds...
+[INFO] [1793514674.380161734] [view_frames]: Generating graph...
+[INFO] [1793514674.382338136] [view_frames]: Result:tf2_msgs.srv.FrameGraph_Response(frame_yaml="camera_link: \n  parent: 'base_link'\n  broadcaster: 'default_authority'\n  rate: 10000.000\n  most_recent_transform: 0.000000\n  oldest_transform: 0.000000\n  buffer_length: 0.000\nimu_link: \n  parent: 'base_link'\n  broadcaster: 'default_authority'\n  rate: 10000.000\n  most_recent_transform: 0.000000\n  oldest_transform: 0.000000\n  buffer_length: 0.000\nlidar_link: \n  parent: 'base_link'\n  broadcaster: 'default_authority'\n  rate: 10000.000\n  most_recent_transform: 0.000000\n  oldest_transform: 0.000000\n  buffer_length: 0.000\n")
+[INFO] [1793514674.384136353] [view_frames]: Exporting graph in frames_2026-11-01_13.31.14.pdf file...
+
+$ ls frames_*.pdf
+frames_2026-11-01_13.31.14.pdf
+
+$ (дефект) ros2 run tf2_ros tf2_echo base_link lidar_link при parent camera_link
+- Translation: [0.560, 0.000, 0.760]  (ожидается 0.280 0.000 0.380)
+$ (исправлено) ros2 run tf2_ros tf2_echo base_link lidar_link
+$ (исправлено) python3 -m pytest src/course_description/test
+10 passed

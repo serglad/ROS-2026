@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "practice_id": "PR06",
+  "commit": "ae1aab6bcd61b202ff9c4f42a3eb98b8e2e43a61",
+  "course_kit": {
+    "version": "v1-w08",
+    "archive_sha256": "aea8efd0a51668af63f2e475b82bfa28bd76c21f20d8afea6b136d43a56a88fb"
+  },
+  "commands": ["xacro src/course_description/urdf/vehicle.urdf.xacro > /tmp/vehicle.urdf","check_urdf /tmp/vehicle.urdf","colcon build --symlink-install --packages-select course_description","python3 -m pytest src/course_description/test","ros2 launch course_description description.launch.py","ros2 launch course_description description.launch.py gui:=true","ros2 topic info /tf_static --verbose","timeout 4 ros2 topic echo /tf_static --once --qos-durability transient_local --qos-reliability reliable","timeout 4 ros2 topic echo /tf_static --once --qos-durability volatile --qos-reliability reliable","ros2 run tf2_ros tf2_echo base_link lidar_link","ros2 run tf2_tools view_frames"],
+  "tests": [{"name": "pytest src/course_description/test", "status": "passed"},{"name": "test_required_links_present", "status": "passed"},{"name": "test_lidar_parent_is_base", "status": "passed"},{"name": "test_sensor_offsets_match_sdf", "status": "passed"},{"name": "test_wheel_dimensions_match_sdf", "status": "passed"},{"name": "test_wheel_joints_continuous_about_y", "status": "passed"},{"name": "test_tree_connected_and_acyclic", "status": "passed"},{"name": "test_inertials_physically_positive", "status": "passed"},{"name": "check_urdf", "status": "passed"},{"name": "flake8 course_description", "status": "passed"},{"name": "pep257 course_description", "status": "passed"}],
+  "defect": {
+    "reproducer": "коммит 0d89724: parent lidar_joint заменён на camera_link при прежнем offset — check_urdf всё ещё успешно разбирает дерево, но tf2_echo base_link lidar_link даёт Translation [0.560, 0.000, 0.760] вместо [0.280, 0.000, 0.380], а test_lidar_parent_is_base падает",
+    "root_cause": "лидар подвешен к camera_link, его base-frame положение стало суммой offset camera и lidar; структурная валидность URDF не отражает семантическую ошибку родителя",
+    "proof_after": "коммит ae1aab6: parent возвращён на base_link; tf2_echo base_link lidar_link снова [0.280, 0.000, 0.380], view_frames показывает lidar_link parent base_link, test_lidar_parent_is_base и весь pytest зелёные (10 passed)"
+  },
+  "claims": {
+    "public_tests_passed": true,
+    "defect_reproduced": true,
+    "defect_fixed": true
+  },
+  "time": {
+    "contact_academic_hours": 2,
+    "self_study_hours": 2
+  },
+  "ai_used": true
+}

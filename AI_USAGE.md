@@ -26,3 +26,12 @@ report.ai_used=false
 - Затронутые компоненты: пакет `src/course_bringup` (pose_relay, launch с аргументами), `config/qos-overrides.yaml`, `evidence/pr05/*`, `.github/workflows/PR05.yml`.
 - Характер помощи: реализация по актуальному условию с сайта (манифест kit v1-w08), отладка имени темы записи и финализации bag, оформление evidence и workflow; локальные запуски выполнялись в терминале окружения.
 - Как результат был проверен независимо: `colcon test-result` (19 тестов, 0 failures), живой опыт QoS incompatible → переход на совместимый профиль (echo exit 124 → exit 0, probe 0 → 598 поз), запись MCAP (449 сообщений, один поток) и повтор с overrides, `check_practice.py PR05`.
+
+## PR06
+
+- Использован ИИ: да (`ai_used: true` в отчёте этой ПР).
+- Модель и версия: Qwen3.8-flash-next (ID `deepcode/qwen3.8-flash-next`).
+- Среда или интерфейс агента: Kilo CLI в VS Code.
+- Затронутые компоненты: пакет `src/course_description` (Xacro-модель, launch, структурные тесты), `evidence/pr06/*`, `.github/workflows/PR06.yml`.
+- Характер помощи: Xacro по размерам из kit-SDF, тесты и evidence, отладка launch-подстановок; локальные запуски (robot_state_publisher, RViz, tf2-инструменты) выполнялись в терминале окружения.
+- Как результат был проверен независимо: `check_urdf` развёрнутого URDF, `pytest src/course_description/test` (10 passed), живой `tf2_echo` (0.280/0/0.380; при дефектном родителе 0.560/0/0.760), `view_frames`, `tf-qos.txt` (transient_local exit=0 против volatile exit=124), `check_practice.py PR06`.
