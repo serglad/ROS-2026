@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "practice_id": "PR04",
+  "commit": "d64d129300b058cdccba69de80fba89c700b9efd",
+  "course_kit": {
+    "version": "v1-w08",
+    "archive_sha256": "aea8efd0a51668af63f2e475b82bfa28bd76c21f20d8afea6b136d43a56a88fb"
+  },
+  "commands": ["colcon build --symlink-install --packages-select patrol","source install/setup.bash","python3 -m pytest src/patrol/test","ros2 run patrol patrol --ros-args -r cmd_vel:=/turtle1/cmd_vel -p period:=0.2 -p initial_speed:=0.4 -p turn_speed:=0.3","ros2 run patrol patrol --ros-args -r cmd_vel:=/turtle1/cmd_vel --params-file evidence/pr04/params.yaml","ros2 param dump /patrol","ros2 param set /patrol period 0.5","ros2 param set /patrol period 0.05","ros2 param set /patrol period 0.2","ros2 param set /patrol period 0.0","timeout -s INT 10 ros2 topic hz /turtle1/cmd_vel"],
+  "tests": [{"name": "pytest src/patrol/test", "status": "passed"},{"name": "test_zero_command_without_pose", "status": "passed"},{"name": "test_command_with_params_given_at_startup", "status": "passed"},{"name": "test_command_with_params_changed_in_callback", "status": "passed"},{"name": "test_startup_params_reach_node_state", "status": "passed"},{"name": "test_period_callback_changes_timer", "status": "passed"},{"name": "test_invalid_period_is_rejected", "status": "passed"},{"name": "flake8", "status": "passed"},{"name": "pep257", "status": "passed"}],
+  "defect": {
+    "reproducer": "ros2 param set /patrol period 0.5 при запуске с period:=0.2: ros2 param dump показывает 0.5, но timeout -s INT 10 ros2 topic hz /turtle1/cmd_vel даёт average rate 5.000 — callback менял только числовое поле, таймер хранил старый период",
+    "root_cause": "rclpy Timer фиксирует период при создании и не следит за полем period; без пересоздания таймера частота публикации не меняется",
+    "proof_after": "после пересоздания таймера в callback: param set period 0.05 даёт hz average rate 20.000 (старый таймер cancel, иначе было бы ~25), param set period 0.2 возвращает 5.000; ros2 param dump показывает 0.05/0.2 до и после"
+  },
+  "claims": {
+    "public_tests_passed": true,
+    "defect_reproduced": true,
+    "defect_fixed": true,
+    "period_switch_verified": true
+  },
+  "time": {
+    "contact_academic_hours": 2,
+    "self_study_hours": 2
+  },
+  "ai_used": true
+}

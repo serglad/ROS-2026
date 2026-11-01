@@ -8,3 +8,12 @@ report.ai_used=false
 - Затронутые компоненты: пакет `src/patrol` (нода, чистая функция, тесты), `evidence/pr03/*`, `.github/workflows/PR03.yml`.
 - Характер помощи: генерация каркаса и кода ноды по условию ПР, оформление evidence и workflow; локальные запуски выполнялись в терминале окружения.
 - Как результат был проверен независимо: `colcon build --packages-select patrol`, `python3 -m pytest src/patrol/test`, проверка графа `ros2 topic info` и замер `ros2 topic hz` (10 Гц за 10 с), движение черепашки по `/turtle1/pose`, `check_practice.py PR03`.
+
+## PR04
+
+- Использован ИИ: да (`ai_used: true` в отчёте этой ПР).
+- Модель и версия: Qwen3.8-flash-next (ID `deepcode/qwen3.8-flash-next`).
+- Среда или интерфейс агента: Kilo CLI в VS Code.
+- Затронутые компоненты: пакет `src/patrol` (параметры, descriptor, callback с пересозданием таймера, тесты), `evidence/pr04/*`, `.github/workflows/PR04.yml`.
+- Характер помощи: реализация по условию ПР, отладка импортов и имени полей descriptor, оформление evidence и workflow; локальные запуски выполнялись в терминале окружения.
+- Как результат был проверен независимо: `python3 -m pytest src/patrol/test` (8 passed), живые замеры `ros2 param dump`/`ros2 param set`/`ros2 topic hz` (5→20→5 Гц, отклонение значений вне диапазона), `check_practice.py PR04`.
