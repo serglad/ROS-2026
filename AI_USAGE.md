@@ -35,3 +35,12 @@ report.ai_used=false
 - Затронутые компоненты: пакет `src/course_description` (Xacro-модель, launch, структурные тесты), `evidence/pr06/*`, `.github/workflows/PR06.yml`.
 - Характер помощи: Xacro по размерам из kit-SDF, тесты и evidence, отладка launch-подстановок; локальные запуски (robot_state_publisher, RViz, tf2-инструменты) выполнялись в терминале окружения.
 - Как результат был проверен независимо: `check_urdf` развёрнутого URDF, `pytest src/course_description/test` (10 passed), живой `tf2_echo` (0.280/0/0.380; при дефектном родителе 0.560/0/0.760), `view_frames`, `tf-qos.txt` (transient_local exit=0 против volatile exit=124), `check_practice.py PR06`.
+
+## PR07
+
+- Использован ИИ: да (`ai_used: true` в отчёте этой ПР).
+- Модель и версия: Qwen3.8-flash-next (ID `deepcode/qwen3.8-flash-next`).
+- Среда или интерфейс агента: Kilo CLI в VS Code.
+- Затронутые компоненты: пакеты `src/ackermann_msgs` (vendored сообщения) и `src/course_simulation` (адаптеры Ackermann и одометрии, источник тестовой команды, launch, копия модели с 15 Гц лидаром, мост YAML), `evidence/pr07/*`, `.github/workflows/PR07.yml`.
+- Характер помощи: реализация адаптеров и launch по условию, разбор формата config_file/QoS моста, диагностика дефекта копии YAML, оформление evidence и workflow; запуск Gazebo, замеры и запись выполнялись в терминале окружения.
+- Как результат был проверен независимо: `colcon test-result` (43 теста, 0 failures), живой путь `/drive/safe → адаптер → мост → Gazebo` (`ros2 topic info -v`, значения ROS- и GZ-команд совпали, одометрия и tf двигались), `gz sdf -k`, замер 100 Гц IMU после исправления против тишины до, `ros2 bag info` (34,47 с, 7 топиков), `check_practice.py PR07`.

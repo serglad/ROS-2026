@@ -1,0 +1,53 @@
+{
+  "time_source": "Gazebo world clock via /clock bridge; ROS nodes use use_sim_time=true",
+  "real_time_factor": {
+    "declared": 1.0,
+    "measured": 0.98,
+    "basis": "35 s wall-clock recording produced 34.47 s of /clock time (ros2 bag info)"
+  },
+  "sensors": [
+    {
+      "topic": "/vehicle/camera/image_raw",
+      "ros_type": "sensor_msgs/msg/Image",
+      "frame_id": "camera_link",
+      "time_source": "simulation",
+      "declared_hz": 20.0,
+      "measured_hz": 19.94,
+      "qos": "sensor data: best effort, keep last (verified with ros2 topic info -v)"
+    },
+    {
+      "topic": "/vehicle/scan",
+      "ros_type": "sensor_msgs/msg/LaserScan",
+      "frame_id": "lidar_link",
+      "time_source": "simulation",
+      "declared_hz": 15.0,
+      "declared_hz_note": "changed from the kit baseline 10 Hz in this copy of model.sdf",
+      "measured_hz": 15.15,
+      "qos": "sensor data: best effort, keep last (verified with ros2 topic info -v)"
+    },
+    {
+      "topic": "/vehicle/imu",
+      "ros_type": "sensor_msgs/msg/Imu",
+      "frame_id": "imu_link",
+      "time_source": "simulation",
+      "declared_hz": 100.0,
+      "measured_hz": 100.0,
+      "qos": "sensor data: best effort, keep last (verified with ros2 topic info -v)"
+    },
+    {
+      "topic": "/vehicle/odom",
+      "ros_type": "nav_msgs/msg/Odometry",
+      "frame_id": "odom (normalized from course_ackermann/odom)",
+      "child_frame_id": "base_link (normalized from course_ackermann/base_link)",
+      "time_source": "simulation",
+      "declared_hz": 50.0,
+      "measured_hz": 49.98,
+      "qos": "reliable, keep last (bridge default)"
+    }
+  ],
+  "source_odometry_frames": {
+    "header.frame_id": "course_ackermann/odom",
+    "child_frame_id": "course_ackermann/base_link"
+  },
+  "rate_note": "ros2 topic hz measures wall-clock arrival; the residual deviation of up to 1.5 percent is explained by the measured real time factor 0.98 (CPU headless OGRE2/EGL rendering) and bursty arrival of bridged messages, not by the sensor update_rate."
+}

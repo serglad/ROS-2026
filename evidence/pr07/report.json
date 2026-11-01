@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "practice_id": "PR07",
+  "commit": "5cb502a2835ce65afcdde9f248ec9d85ebf6f642",
+  "course_kit": {
+    "version": "v1-w08",
+    "archive_sha256": "aea8efd0a51668af63f2e475b82bfa28bd76c21f20d8afea6b136d43a56a88fb"
+  },
+  "environment_note": "фактическая связка Ubuntu 24.04 + ROS 2 Jazzy + Gazebo Harmonic (ros-jazzy-ros-gz 1.0.24); нормативная связка baseline.lock.yaml (Lyrical/Jetty) не выбрана локально, SDF 1.10 совместим с Harmonic",
+  "commands": ["gz sdf -k src/course_simulation/models/course_ackermann/model.sdf","export GZ_SIM_RESOURCE_PATH=\"$PWD/src/course_simulation/models${GZ_SIM_RESOURCE_PATH:+:$GZ_SIM_RESOURCE_PATH}\"","colcon build --symlink-install --packages-up-to course_simulation","ros2 launch course_simulation simulation.launch.py world:=$PWD/src/course_simulation/worlds/mcity-minimal.sdf bridge_config:=$PWD/src/course_simulation/config/bridge.yaml headless:=true namespace:=/course_demo","ros2 run course_simulation test_command --ros-args -p use_sim_time:=true","ros2 topic info -v /vehicle/gz_cmd_vel","gz topic -i -t /model/course_ackermann/cmd_vel","ros2 topic echo /clock --once","ros2 topic echo /vehicle/gz_cmd_vel --once","timeout 3s gz topic -e -t /model/course_ackermann/cmd_vel","ros2 topic echo /vehicle/odom --once","ros2 run tf2_ros tf2_echo odom base_link --ros-args -p use_sim_time:=true","timeout -s INT 5 ros2 topic hz /vehicle/imu","timeout -s INT 8 ros2 topic hz /vehicle/scan","timeout -s INT 8 ros2 topic hz /vehicle/camera/image_raw","timeout -s INT 5 ros2 topic hz /vehicle/odom","timeout --preserve-status --signal=INT --kill-after=5s 35s ros2 bag record --storage mcap --use-sim-time -o fixtures/pr07-sensors --topics /vehicle/camera/image_raw /vehicle/scan /vehicle/imu /vehicle/odom /tf /tf_static /clock","ros2 bag info fixtures/pr07-sensors","colcon test --packages-select course_simulation","colcon test-result --verbose"],
+  "tests": [{"name": "colcon test course_simulation (43 tests, 0 errors, 0 failures)", "status": "passed"}, {"name": "test_straight_motion", "status": "passed"}, {"name": "test_turn_from_steering_angle", "status": "passed"}, {"name": "test_zero_speed_no_rotation_in_place", "status": "passed"}, {"name": "test_speed_and_steering_are_clamped", "status": "passed"}, {"name": "test_stale_command_is_zero", "status": "passed"}, {"name": "test_non_finite_command_is_zero", "status": "passed"}, {"name": "test_odometry_frames_normalized_and_stamp_preserved", "status": "passed"}, {"name": "test_odometry_pose_twist_and_covariance_preserved", "status": "passed"}, {"name": "test_odometry_with_unexpected_frames_rejected", "status": "passed"}, {"name": "test_odometry_with_non_finite_values_rejected", "status": "passed"}, {"name": "bag duration >= 30 s sim time, 7 topics non-empty", "status": "passed"}],
+  "defect": {
+    "reproducer": "ros2 launch ... bridge_config:=...bridge_broken.yaml (копия с gz_topic_name: /vehicle/imu_wrong); ros2 topic info -v /vehicle/imu показывает издателя gz_bridge, но timeout 4s ros2 topic echo /vehicle/imu --once и ros2 topic hz не получают ни одного сообщения (exit 124); черепашка-датчик IMU молчит, остальные топики живы",
+    "root_cause": "в YAML моста указан несуществующий Gazebo-топик /vehicle/imu_wrong: мост остаётся ROS-издателем /vehicle/imu, но подписан на имя, где нет издателя; сенсор публикует реальный /vehicle/imu (gz topic -i подтверждает издателя и отсутствие подписчиков)",
+    "proof_after": "тот же единственный мост перезапущен с bridge.yaml: timeout -s INT 5 ros2 topic hz /vehicle/imu даёт average rate ~100.0, gz topic -i -t /vehicle/imu показывает подписчика моста; второго моста не создавалось"
+  },
+  "claims": {
+    "public_tests_passed": true,
+    "defect_reproduced": true,
+    "defect_fixed": true,
+    "headless_verified": true,
+    "recording_verified": true,
+    "odometry_tf_owned": true
+  },
+  "time": {
+    "contact_academic_hours": 2,
+    "self_study_hours": 2.5
+  },
+  "ai_used": true
+}
