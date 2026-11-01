@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="course_ackermann">
+
+  <!-- Sizes taken from the course kit SDF models/course_ackermann/model.sdf.
+       Units: metres, kilograms; axes follow REP-103 (x forward, y left, z up). -->
+  <xacro:property name="wheelbase" value="0.8"/>
+  <xacro:property name="track_width" value="0.62"/>
+  <xacro:property name="wheel_radius" value="0.12"/>
+  <xacro:property name="wheel_width" value="0.07"/>
+  <xacro:property name="chassis_length" value="1.05"/>
+  <xacro:property name="chassis_width" value="0.52"/>
+  <xacro:property name="chassis_height" value="0.22"/>
+  <xacro:property name="chassis_z" value="0.12"/>
+  <xacro:property name="axle_x" value="${wheelbase / 2}"/>
+  <xacro:property name="wheel_y" value="${track_width / 2}"/>
+  <xacro:property name="sensor_x" value="0.28"/>
+  <xacro:property name="sensor_z" value="0.38"/>
+  <xacro:property name="camera_size_x" value="0.02"/>
+  <xacro:property name="camera_size_y" value="0.12"/>
+  <xacro:property name="camera_size_z" value="0.03"/>
+  <xacro:property name="lidar_radius" value="0.05"/>
+  <xacro:property name="lidar_height" value="0.04"/>
+  <xacro:property name="imu_size" value="0.03"/>
+  <xacro:property name="chassis_mass" value="12.0"/>
+  <xacro:property name="wheel_mass" value="0.8"/>
+  <xacro:property name="sensor_mass" value="0.033333333"/>
+  <xacro:property name="pi_2" value="1.57079632679"/>
+
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0 0 ${chassis_z}" rpy="0 0 0"/>
+      <mass value="${chassis_mass}"/>
+      <inertia ixx="0.55" iyy="1.10" izz="1.40"
+               ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 ${chassis_z}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+      </geometry>
+      <material name="blue">
+        <color rgba="0.05 0.36 0.72 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 ${chassis_z}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <xacro:macro name="wheel" params="prefix x y">
+    <link name="${prefix}_wheel_link">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="${wheel_mass}"/>
+        <!-- Solid disc about the Y axle: Iyy = m r^2 / 2,
+             Ixx = Izz = m (3 r^2 + w^2) / 12. -->
+        <inertia ixx="${wheel_mass * (3 * wheel_radius * wheel_radius + wheel_width * wheel_width) / 12}"
+                 iyy="${wheel_mass * wheel_radius * wheel_radius / 2}"
+                 izz="${wheel_mass * (3 * wheel_radius * wheel_radius + wheel_width * wheel_width) / 12}"
+                 ixy="0" ixz="0" iyz="0"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="${pi_2} 0 0"/>
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+        </geometry>
+        <material name="dark">
+          <color rgba="0.04 0.04 0.04 1.0"/>
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="${pi_2} 0 0"/>
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+        </geometry>
+      </collision>
+    </link>
+    <joint name="${prefix}_wheel_joint" type="continuous">
+      <parent link="base_link"/>
+      <child link="${prefix}_wheel_link"/>
+      <origin xyz="${x} ${y} 0" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:wheel prefix="front_left" x="${axle_x}" y="${wheel_y}"/>
+  <xacro:wheel prefix="front_right" x="${axle_x}" y="${-wheel_y}"/>
+  <xacro:wheel prefix="rear_left" x="${-axle_x}" y="${wheel_y}"/>
+  <xacro:wheel prefix="rear_right" x="${-axle_x}" y="${-wheel_y}"/>
+
+  <link name="lidar_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="${sensor_mass}"/>
+      <inertia ixx="0.000333333" iyy="0.000333333" izz="0.000333333"
+               ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${lidar_radius}" length="${lidar_height}"/>
+      </geometry>
+      <material name="red">
+        <color rgba="0.8 0.1 0.1 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${lidar_radius}" length="${lidar_height}"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="lidar_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="lidar_link"/>
+    <origin xyz="${sensor_x} 0 ${sensor_z}" rpy="0 0 0"/>
+  </joint>
+
+  <link name="camera_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="${sensor_mass}"/>
+      <inertia ixx="0.000333333" iyy="0.000333333" izz="0.000333333"
+               ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${camera_size_x} ${camera_size_y} ${camera_size_z}"/>
+      </geometry>
+      <material name="grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${camera_size_x} ${camera_size_y} ${camera_size_z}"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="camera_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="camera_link"/>
+    <origin xyz="${sensor_x} 0 ${sensor_z}" rpy="0 0 0"/>
+  </joint>
+
+  <link name="imu_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="${sensor_mass}"/>
+      <inertia ixx="0.000333333" iyy="0.000333333" izz="0.000333333"
+               ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${imu_size} ${imu_size} ${imu_size}"/>
+      </geometry>
+      <material name="green">
+        <color rgba="0.1 0.7 0.1 1.0"/>
+      </material>
+    </visual>
+  </link>
+  <joint name="imu_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+    <origin xyz="${sensor_x} 0 ${sensor_z}" rpy="0 0 0"/>
+  </joint>
+
+</robot>
