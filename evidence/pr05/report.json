@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "practice_id": "PR05",
+  "commit": "6124ad79310432c5acf98d5d535e95b294be00f4",
+  "course_kit": {
+    "version": "v1-w08",
+    "archive_sha256": "aea8efd0a51668af63f2e475b82bfa28bd76c21f20d8afea6b136d43a56a88fb"
+  },
+  "commands": ["colcon build --symlink-install","colcon test --packages-select turtle_bringup patrol course_bringup","colcon test-result --verbose","python3 -m pytest src/course_bringup/test","ros2 launch course_bringup patrol.launch.py namespace:=robot_a subscriber_reliability:=reliable record:=false","ros2 launch course_bringup patrol.launch.py namespace:=robot_a subscriber_reliability:=best_effort record:=true bag_dir:=evidence/pr05/bag","ros2 node list","ros2 topic list","timeout 3s ros2 topic echo /robot_a/sensor_pose --qos-reliability reliable --once","timeout 3s ros2 topic echo /robot_a/sensor_pose --qos-reliability best_effort --once","ros2 topic info /robot_a/sensor_pose --verbose","ros2 bag play evidence/pr05/bag --qos-profile-overrides-path config/qos-overrides.yaml","ros2 bag info evidence/pr05/bag","cp evidence/pr05/bag/metadata.yaml evidence/pr05/bag-metadata.yaml"],
+  "tests": [{"name": "colcon test-result --verbose", "status": "passed"},{"name": "test_publisher_is_best_effort", "status": "passed"},{"name": "test_subscriber_best_effort_matches_publisher", "status": "passed"},{"name": "test_subscriber_reliable_profile", "status": "passed"},{"name": "test_unknown_reliability_rejected", "status": "passed"},{"name": "flake8 course_bringup", "status": "passed"},{"name": "pep257 course_bringup", "status": "passed"}],
+  "defect": {
+    "reproducer": "timeout 3s ros2 topic echo /robot_a/sensor_pose --qos-reliability reliable --once против launch с subscriber_reliability:=reliable: топик в ros2 topic list есть, echo молчит (exit 124), в логах offering incompatible QoS Last incompatible policy: RELIABILITY, pose_probe received 0 poses; info --verbose: издатель BEST_EFFORT, подписчик RELIABLE",
+    "root_cause": "несовместимость политик QoS: издатель sensor_pose создан с best effort, а reliable-подписчик best effort издателем не обслуживается",
+    "proof_after": "перезапуск с subscriber_reliability:=best_effort: живой echo получает Pose (exit 0), pose_probe received 598 poses; на повторе той же записи с config/qos-overrides.yaml echo также exit 0; ros2 bag info: один поток /robot_a/sensor_pose, 449 сообщений"
+  },
+  "claims": {
+    "public_tests_passed": true,
+    "defect_reproduced": true,
+    "defect_fixed": true,
+    "replay_verified": true
+  },
+  "time": {
+    "contact_academic_hours": 2,
+    "self_study_hours": 2
+  },
+  "ai_used": true
+}

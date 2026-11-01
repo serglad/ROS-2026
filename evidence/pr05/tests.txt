@@ -1,0 +1,16 @@
+$ colcon build --symlink-install
+Summary: 4 packages finished
+
+$ colcon test --packages-select turtle_bringup patrol course_bringup
+$ colcon test-result --verbose
+Summary: 19 tests, 0 errors, 0 failures, 3 skipped
+
+$ python3 -m pytest src/course_bringup/test -v
+src/course_bringup/test/test_copyright.py::test_copyright SKIPPED (N...) [ 14%]
+src/course_bringup/test/test_flake8.py::test_flake8 PASSED               [ 28%]
+src/course_bringup/test/test_pep257.py::test_pep257 PASSED               [ 42%]
+src/course_bringup/test/test_pose_relay.py::test_publisher_is_best_effort PASSED [ 57%]
+src/course_bringup/test/test_pose_relay.py::test_subscriber_best_effort_matches_publisher PASSED [ 71%]
+src/course_bringup/test/test_pose_relay.py::test_subscriber_reliable_profile PASSED [ 85%]
+src/course_bringup/test/test_pose_relay.py::test_unknown_reliability_rejected PASSED [100%]
+================== 6 passed, 1 skipped, 16 warnings in 0.52s ===================

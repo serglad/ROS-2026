@@ -17,3 +17,12 @@ report.ai_used=false
 - Затронутые компоненты: пакет `src/patrol` (параметры, descriptor, callback с пересозданием таймера, тесты), `evidence/pr04/*`, `.github/workflows/PR04.yml`.
 - Характер помощи: реализация по условию ПР, отладка импортов и имени полей descriptor, оформление evidence и workflow; локальные запуски выполнялись в терминале окружения.
 - Как результат был проверен независимо: `python3 -m pytest src/patrol/test` (8 passed), живые замеры `ros2 param dump`/`ros2 param set`/`ros2 topic hz` (5→20→5 Гц, отклонение значений вне диапазона), `check_practice.py PR04`.
+
+## PR05
+
+- Использован ИИ: да (`ai_used: true` в отчёте этой ПР).
+- Модель и версия: Qwen3.8-flash-next (ID `deepcode/qwen3.8-flash-next`).
+- Среда или интерфейс агента: Kilo CLI в VS Code.
+- Затронутые компоненты: пакет `src/course_bringup` (pose_relay, launch с аргументами), `config/qos-overrides.yaml`, `evidence/pr05/*`, `.github/workflows/PR05.yml`.
+- Характер помощи: реализация по актуальному условию с сайта (манифест kit v1-w08), отладка имени темы записи и финализации bag, оформление evidence и workflow; локальные запуски выполнялись в терминале окружения.
+- Как результат был проверен независимо: `colcon test-result` (19 тестов, 0 failures), живой опыт QoS incompatible → переход на совместимый профиль (echo exit 124 → exit 0, probe 0 → 598 поз), запись MCAP (449 сообщений, один поток) и повтор с overrides, `check_practice.py PR05`.

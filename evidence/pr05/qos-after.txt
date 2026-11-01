@@ -1,0 +1,88 @@
+$ ros2 topic list | grep sensor
+/robot_a/sensor_pose
+
+$ timeout 3s ros2 topic echo /robot_a/sensor_pose --qos-reliability best_effort --once
+x: 6.105035781860352
+y: 8.779233932495117
+theta: 2.793600082397461
+linear_velocity: 0.5
+angular_velocity: 0.30000001192092896
+---
+exit: 0
+
+$ ros2 topic info /robot_a/sensor_pose --verbose
+Type: turtlesim/msg/Pose
+
+Publisher count: 1
+
+Node name: pose_relay
+Node namespace: /robot_a
+Topic type: turtlesim/msg/Pose
+Topic type hash: RIHS01_739beba26bcba6920404ba722b7b8321348512f92ea5be235c47251940dd8aa9
+Endpoint type: PUBLISHER
+GID: 01.0f.8e.d4.78.32.a8.d6.00.00.00.00.00.00.14.03
+QoS profile:
+  Reliability: BEST_EFFORT
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Subscription count: 2
+
+Node name: pose_probe
+Node namespace: /robot_a
+Topic type: turtlesim/msg/Pose
+Topic type hash: RIHS01_739beba26bcba6920404ba722b7b8321348512f92ea5be235c47251940dd8aa9
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.8e.d4.79.32.4a.6e.00.00.00.00.00.00.13.04
+QoS profile:
+  Reliability: BEST_EFFORT
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Node name: rosbag2_recorder
+Node namespace: /
+Topic type: turtlesim/msg/Pose
+Topic type hash: RIHS01_739beba26bcba6920404ba722b7b8321348512f92ea5be235c47251940dd8aa9
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.8e.d4.7a.32.72.61.00.00.00.00.00.00.26.04
+QoS profile:
+  Reliability: BEST_EFFORT
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+
+# replay: ros2 bag play evidence/pr05/bag --qos-profile-overrides-path config/qos-overrides.yaml
+$ timeout 3s ros2 topic echo /robot_a/sensor_pose --qos-reliability best_effort --once
+x: 5.834879398345947
+y: 8.8515625
+theta: 2.9616000652313232
+linear_velocity: 0.5
+angular_velocity: 0.30000001192092896
+---
+exit: 0  (сообщения из записи приходят)
+
+$ ros2 bag info evidence/pr05/bag  (запись содержит один поток)
+
+Files:             bag_0.mcap
+Bag size:          35.8 KiB
+Storage id:        mcap
+ROS Distro:        jazzy
+Duration:          22.400046461s
+Start:             Nov  1 2026 13:17:43.611487226 (1793513863.611487226)
+End:               Nov  1 2026 13:18:06.011533687 (1793513886.011533687)
+Messages:          449
+Topic information: Topic: /robot_a/sensor_pose | Type: turtlesim/msg/Pose | Count: 449 | Serialization Format: cdr
+Service:           0
+Service information: 
