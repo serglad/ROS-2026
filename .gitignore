@@ -8,3 +8,6 @@ robotics-course-kit-*.sha256.txt
 __pycache__/
 *.pyc
 evidence/pr05/bag/
+
+fixtures/
+.pytest_cache/
